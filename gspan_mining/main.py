@@ -25,6 +25,7 @@ def main(FLAGS=None):
         database_file_name=FLAGS.database_file_name,
         min_support=FLAGS.min_support,
         min_num_vertices=FLAGS.lower_bound_of_num_vertices,
+        min_num_edges=FLAGS.lower_bound_of_num_edges,
         max_num_vertices=FLAGS.upper_bound_of_num_vertices,
         max_ngraphs=FLAGS.num_graphs,
         is_undirected=(not FLAGS.directed),

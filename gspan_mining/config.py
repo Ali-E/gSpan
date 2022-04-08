@@ -32,6 +32,12 @@ parser.add_argument(
     help='int, lower bound of number of vertices of output subgraph, default 2'
 )
 parser.add_argument(
+    '-e', '--lower_bound_of_num_edges',
+    type=int,
+    default=1,
+    help='int, lower bound of number of edges of output subgraph, default 1'
+)
+parser.add_argument(
     '-u', '--upper_bound_of_num_vertices',
     type=int,
     default=float('inf'),

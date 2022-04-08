@@ -8,6 +8,7 @@ import collections
 import copy
 import itertools
 import time
+import numpy as np
 
 from .graph import AUTO_EDGE_ID
 from .graph import Graph
@@ -186,6 +187,7 @@ class gSpan(object):
                  database_file_name,
                  min_support=10,
                  min_num_vertices=1,
+                 min_num_edges=1,
                  max_num_vertices=float('inf'),
                  max_ngraphs=float('inf'),
                  is_undirected=True,
@@ -199,10 +201,12 @@ class gSpan(object):
         self._is_undirected = is_undirected
         self._min_support = min_support
         self._min_num_vertices = min_num_vertices
+        self._min_num_edges = min_num_edges
         self._max_num_vertices = max_num_vertices
         self._DFScode = DFScode()
         self._support = 0
         self._frequent_size1_subgraphs = list()
+        self.filtered_subgraphs = list()
         # Include subgraphs with
         # any num(but >= 2, <= max_num_vertices) of vertices.
         self._frequent_subgraphs = list()
@@ -329,6 +333,18 @@ class gSpan(object):
             return
         g = self._DFScode.to_graph(gid=next(self._counter),
                                    is_undirected=self._is_undirected)
+
+
+        
+        vertices_t = g.vertices
+        deg_list_t = [len(vertices_t[v].edges) for v in vertices_t]
+        edge_count = int(np.sum(deg_list_t) / 2)
+        if edge_count < self._min_num_edges:
+            return
+        # print('--------------->', edge_count)
+
+        self.filtered_subgraphs.append(g)
+
         display_str = g.display()
         print('\nSupport: {}'.format(self._support))
 
@@ -510,7 +526,9 @@ class gSpan(object):
             return
         if not self._is_min():
             return
+
         self._report(projected)
+        
 
         num_vertices = self._DFScode.get_num_vertices()
         self._DFScode.build_rmpath()

@@ -6,6 +6,8 @@ from __future__ import print_function
 import collections
 import itertools
 
+from networkx.drawing.nx_agraph import graphviz_layout
+
 
 VACANT_EDGE_ID = -1
 VACANT_VERTEX_ID = -1
@@ -127,7 +129,7 @@ class Graph(object):
                     display_str += 'e {} {} {}'.format(frm, to, edges[to].elb)
         return display_str
 
-    def plot(self):
+    def plot(self, save_path=None):
         """Visualize the graph."""
         try:
             import networkx as nx
@@ -148,7 +150,23 @@ class Graph(object):
         fsize = (min(16, 1 * len(self.vertices)),
                  min(16, 1 * len(self.vertices)))
         plt.figure(3, figsize=fsize)
-        pos = nx.spectral_layout(gnx)
-        nx.draw_networkx(gnx, pos, arrows=True, with_labels=True, labels=vlbs)
-        nx.draw_networkx_edge_labels(gnx, pos, edge_labels=elbs)
+
+        pos = graphviz_layout(gnx, prog='circo', args='')
+        fig, ax = plt.subplots()
+        nodesize = 45
+        nx.draw_networkx_nodes(gnx, pos=pos, node_size=nodesize, node_color="#210070", alpha=0.3)
+        nx.draw_networkx_edges(gnx, pos=pos, nodelist=list(gnx.nodes()), alpha=0.5, edge_color="m", node_size=nodesize, ax=ax)
+
+        # pos = nx.spectral_layout(gnx)
+        # nx.draw_networkx(gnx, pos, arrows=False, node_size=nodesize, alpha=0.5, edge_color='m', with_labels=True, labels=vlbs)
+        # nx.draw_networkx_edge_labels(gnx, pos, edge_labels=elbs)
+
+        label_options = {"ec": "k", "fc": "white", "alpha": 0.7}
+        nx.draw_networkx_labels(gnx, pos=pos, font_size=14, labels=vlbs, bbox=label_options)
+
+        if save_path is not None:
+            plt.savefig(save_path, dpi=400)
         plt.show()
+
+
+
