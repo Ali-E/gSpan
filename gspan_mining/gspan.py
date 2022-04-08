@@ -193,6 +193,7 @@ class gSpan(object):
                  is_undirected=True,
                  verbose=False,
                  visualize=False,
+                 display_flag=False,
                  where=False):
         """Initialize gSpan instance."""
         self._database_file_name = database_file_name
@@ -214,6 +215,7 @@ class gSpan(object):
         self._verbose = verbose
         self._visualize = visualize
         self._where = where
+        self._display_flag = display_flag
         self.timestamps = dict()
         if self._max_num_vertices < self._min_num_vertices:
             print('Max number of vertices can not be smaller than '
@@ -345,25 +347,26 @@ class gSpan(object):
 
         self.filtered_subgraphs.append(g)
 
-        display_str = g.display()
-        print('\nSupport: {}'.format(self._support))
+        if self._display_flag:
+            display_str = g.display()
+            print('\nSupport: {}'.format(self._support))
 
-        # Add some report info to pandas dataframe "self._report_df".
-        self._report_df = self._report_df.append(
-            pd.DataFrame(
-                {
-                    'support': [self._support],
-                    'description': [display_str],
-                    'num_vert': self._DFScode.get_num_vertices()
-                },
-                index=[int(repr(self._counter)[6:-1])]
+            # Add some report info to pandas dataframe "self._report_df".
+            self._report_df = self._report_df.append(
+                pd.DataFrame(
+                    {
+                        'support': [self._support],
+                        'description': [display_str],
+                        'num_vert': self._DFScode.get_num_vertices()
+                    },
+                    index=[int(repr(self._counter)[6:-1])]
+                )
             )
-        )
         if self._visualize:
             g.plot()
         if self._where:
             print('where: {}'.format(list(set([p.gid for p in projected]))))
-        print('\n-----------------\n')
+            print('\n-----------------\n')
 
     def _get_forward_root_edges(self, g, frm):
         result = []

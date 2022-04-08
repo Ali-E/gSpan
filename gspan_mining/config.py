@@ -51,6 +51,12 @@ parser.add_argument(
     help='bool, run for directed graphs, default off, i.e. undirected graphs'
 )
 parser.add_argument(
+    '-t', '--display_flag',
+    type=str2bool,
+    default=False,
+    help='bool, display the graph and the support for the found graphs.'
+)
+parser.add_argument(
     '-v', '--verbose',
     type=str2bool,
     default=False,

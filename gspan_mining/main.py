@@ -31,6 +31,7 @@ def main(FLAGS=None):
         is_undirected=(not FLAGS.directed),
         verbose=FLAGS.verbose,
         visualize=FLAGS.plot,
+        display_flag=FLAGS.display_flag,
         where=FLAGS.where
     )
 
