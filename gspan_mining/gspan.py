@@ -345,7 +345,7 @@ class gSpan(object):
             return
         # print('--------------->', edge_count)
 
-        self.filtered_subgraphs.append(g)
+        self.filtered_subgraphs.append((g, self._support))
 
         if self._display_flag:
             display_str = g.display()
